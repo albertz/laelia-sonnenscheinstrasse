@@ -69,7 +69,6 @@ class Character:
                 target.caught_dt += dt
                 if target.caught_dt > 1:
                     game_score.score += 1
-                    self.pos = get_random_position()
                     target.reset()
 
     def draw(self):
