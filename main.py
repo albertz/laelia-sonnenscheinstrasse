@@ -62,6 +62,14 @@ class Character:
     def move(self, x, y):
         self.pos.x += x
         self.pos.y += y
+        if self.pos.x < 0:
+            self.pos.x = 0
+        if self.pos.x > screen.get_width():
+            self.pos.x = screen.get_width()
+        if self.pos.y < 0:
+            self.pos.y = 0
+        if self.pos.y > screen.get_height():
+            self.pos.y = screen.get_height()
 
     def update_player(self):
         for target in targets:
