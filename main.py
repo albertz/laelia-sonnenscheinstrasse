@@ -103,22 +103,6 @@ class Area:
         pygame.draw.rect(screen, self.color, pygame.Rect(self.pos, self.size))
 
 
-players = [
-    Character("assets/mais-fliegt.jpeg"),
-    Character("assets/magarinenkaefer-mit-magarine.jpeg"),
-    Character("assets/katze-pink-fliegt.jpeg"),
-]
-areas = [
-    Area("sky", pygame.Vector2(0, 0), pygame.Vector2(screen.get_width(), screen.get_height() / 2), "skyblue"),
-    Area(
-        "ground",
-        pygame.Vector2(0, screen.get_height() / 2),
-        pygame.Vector2(screen.get_width(), screen.get_height() / 2),
-        "white",
-    ),
-]
-
-
 class Snow:
     def __init__(self, *, num: int = 100):
         self.positions = [get_random_position() for _ in range(num)]
@@ -161,9 +145,6 @@ class Sun:
             )
 
 
-sun = Sun()
-
-
 class CharacterTarget(Character):
     def __init__(self, gfx_path: str):
         super().__init__(gfx_path)
@@ -190,7 +171,31 @@ class CharacterTarget(Character):
             pygame.draw.circle(screen, "red", self.pos, self.caught_dt * 100, width=10)
 
 
-targets = [CharacterTarget("assets/pferd-zaehne-fliegt.jpeg"), CharacterTarget("assets/mais-boxt.jpeg")]
+sun = Sun()
+
+areas = [
+    Area("sky", pygame.Vector2(0, 0), pygame.Vector2(screen.get_width(), screen.get_height() / 2), "skyblue"),
+    Area(
+        "ground",
+        pygame.Vector2(0, screen.get_height() / 2),
+        pygame.Vector2(screen.get_width(), screen.get_height() / 2),
+        "white",
+    ),
+]
+
+players = [
+    Character("assets/mais-fliegt.jpeg"),
+    Character("assets/magarinenkaefer-mit-magarine.jpeg"),
+    Character("assets/katze-pink-fliegt.jpeg"),
+    Character("assets/elefant-blau-plumst.jpeg"),
+]
+
+targets = [
+    CharacterTarget("assets/pferd-zaehne-fliegt.jpeg"),
+    CharacterTarget("assets/mais-boxt.jpeg"),
+    CharacterTarget("assets/mais-clown.jpeg"),
+    CharacterTarget("assets/vogel-boxt.jpeg"),
+]
 
 
 class Score:
