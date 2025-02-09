@@ -2,6 +2,7 @@
 Sonnenschein
 """
 
+import os
 import pygame
 import random
 import math
@@ -14,12 +15,18 @@ running = True
 dt = 0
 
 
+def get_random_position():
+    x = random.randint(0, screen.get_width())
+    y = random.randint(0, screen.get_height())
+    return pygame.Vector2(x, y)
+
+
 class Character:
     Size = 100
 
-    def __init__(self, name, pos: pygame.Vector2, gfx_path: str):
-        self.name = name
-        self.pos = pos
+    def __init__(self, gfx_path: str):
+        self.name = os.path.basename(gfx_path)
+        self.pos = get_random_position()
         self.gfx = pygame.image.load(gfx_path)
         w, h = self.gfx.get_width(), self.gfx.get_height()
         long_side = max(w, h)
@@ -57,12 +64,13 @@ class Character:
         self.pos.y += y
 
     def update_player(self):
-        if (self.pos - bad_horse.pos).length() < 100:
-            bad_horse.caught_dt += dt
-            if bad_horse.caught_dt > 1:
-                game_score.score += 1
-                self.pos = get_random_position()
-                bad_horse.reset()
+        for target in targets:
+            if (self.pos - target.pos).length() < 100:
+                target.caught_dt += dt
+                if target.caught_dt > 1:
+                    game_score.score += 1
+                    self.pos = get_random_position()
+                    target.reset()
 
     def draw(self):
         # Draw gfx
@@ -96,9 +104,9 @@ class Area:
 
 
 players = [
-    Character("Mais", pygame.Vector2(100, 300), "assets/mais-fliegt.jpeg"),
-    Character("Käfer", pygame.Vector2(100, 200), "assets/magarinenkaefer-mit-magarine.jpeg"),
-    Character("Katze", pygame.Vector2(100, 100), "assets/katze-pink-fliegt.jpeg"),
+    Character("assets/mais-fliegt.jpeg"),
+    Character("assets/magarinenkaefer-mit-magarine.jpeg"),
+    Character("assets/katze-pink-fliegt.jpeg"),
 ]
 areas = [
     Area("sky", pygame.Vector2(0, 0), pygame.Vector2(screen.get_width(), screen.get_height() / 2), "skyblue"),
@@ -109,12 +117,6 @@ areas = [
         "white",
     ),
 ]
-
-
-def get_random_position():
-    x = random.randint(0, screen.get_width())
-    y = random.randint(0, screen.get_height())
-    return pygame.Vector2(x, y)
 
 
 class Snow:
@@ -162,15 +164,9 @@ class Sun:
 sun = Sun()
 
 
-class BadHorse(Character):
-    Size = 200
-
-    def __init__(self):
-        super().__init__(
-            "Bad horse",
-            pygame.Vector2(screen.get_width() * 0.7, screen.get_height() * 0.25),
-            "assets/pferd-zaehne-fliegt.jpeg",
-        )
+class CharacterTarget(Character):
+    def __init__(self, gfx_path: str):
+        super().__init__(gfx_path)
         angle = random.random() * math.pi * 2
         self.direction = pygame.Vector2(math.cos(angle), math.sin(angle))
         self.caught_dt = 0.0
@@ -194,7 +190,7 @@ class BadHorse(Character):
             pygame.draw.circle(screen, "red", self.pos, self.caught_dt * 100, width=10)
 
 
-bad_horse = BadHorse()
+targets = [CharacterTarget("assets/pferd-zaehne-fliegt.jpeg"), CharacterTarget("assets/mais-boxt.jpeg")]
 
 
 class Score:
@@ -229,7 +225,8 @@ while running:
     players[0].update_player()
 
     snow.update()
-    bad_horse.update()
+    for target in targets:
+        target.update()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
@@ -238,7 +235,8 @@ while running:
         area.draw()
     sun.draw()
 
-    bad_horse.draw()
+    for target in targets:
+        target.draw()
 
     for player in players:
         player.draw()
