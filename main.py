@@ -62,6 +62,8 @@ class Character:
     def move(self, x, y):
         self.pos.x += x
         self.pos.y += y
+
+    def update_player(self):
         if self.pos.x < 0:
             self.pos.x = 0
         if self.pos.x > screen.get_width():
@@ -70,8 +72,6 @@ class Character:
             self.pos.y = 0
         if self.pos.y > screen.get_height():
             self.pos.y = screen.get_height()
-
-    def update_player(self):
         for target in targets:
             if (self.pos - target.pos).length() < 100:
                 target.caught_dt += dt
@@ -263,5 +263,8 @@ while running:
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(60) / 1000
+
+    dt = max(0.01, dt)  # Prevent division by zero
+    dt = min(0.1, dt)  # Prevent too large dt
 
 pygame.quit()
