@@ -195,6 +195,7 @@ players = [
     Character("assets/magarinenkaefer-mit-magarine.jpeg"),
     Character("assets/katze-pink-fliegt.jpeg"),
     Character("assets/elefant-blau-plumst.jpeg"),
+    Character("assets/magarinenkaefer2.jpeg"),
 ]
 
 targets = [
